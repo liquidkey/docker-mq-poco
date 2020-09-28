@@ -1,0 +1,11 @@
+# build docker image
+docker build -t builder/docker-mq-poco:latest --cache-from builder/docker-mq-poco:latest .
+
+# run maven goals
+docker run -it --rm -v ${pwd}/target:/usr/src/app/target builder/docker-mq-poco -T 1C -o  clean 
+
+# run application
+docker run -it --rm --network docker-mq-poco `
+-e QMGR_HOST=qmgr -v ${pwd}:/app -w /app `
+openjdk:15-alpine `
+sh -c "java -cp target/docker-mq-poco-1.0-SNAPSHOT.jar:target/lib/* com.keyur.dockermqpoco.Application r pub p 1"

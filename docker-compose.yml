@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  qmgr:
+    image: ibmcom/mq
+    ports:
+      - 1414:1414
+      - 9443:9443
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+  pub:
+    image: openjdk:15-alpine
+    command: sh -c "java -cp target/docker-mq-poco-1.0-SNAPSHOT.jar:target/lib/* com.keyur.dockermqpoco.Application r pub p 1"
+    environment:
+      QMGR_HOST: qmgr
+    working_dir: /app
+    volumes:
+      - ./:/app
+    depends_on:
+      - qmgr
+  sub1:
+    image: openjdk:15-alpine
+    command: sh -c "java -cp target/docker-mq-poco-1.0-SNAPSHOT.jar:target/lib/* com.keyur.dockermqpoco.Application r sub p 1 s 1"
+    environment:
+      QMGR_HOST: qmgr
+    working_dir: /app
+    volumes:
+      - ./:/app
+    depends_on:
+      - qmgr
+  sub2:
+    image: openjdk:15-alpine
+    command: sh -c "java -cp target/docker-mq-poco-1.0-SNAPSHOT.jar:target/lib/* com.keyur.dockermqpoco.Application r sub p 1 s 2"
+    environment:
+      QMGR_HOST: qmgr
+    working_dir: /app
+    volumes:
+      - ./:/app
+    depends_on:
+      - qmgr
