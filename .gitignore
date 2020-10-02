@@ -64,3 +64,4 @@ target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputF
 .project
 docker-mq-poco.iml
 mqjms.log*
+.idea/vcs.xml
